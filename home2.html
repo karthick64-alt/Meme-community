@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.svg">
+    <title>Meme Community - Discover & Share</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: {
+                            pink: '#ff00ff',
+                            cyan: '#00ffff',
+                            green: '#00ff00',
+                            yellow: '#ffff00',
+                            purple: '#cc00ff',
+                        }
+                    },
+                    animation: {
+                        'pulse-neon': 'pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'slide-up': 'slide-up 0.5s ease-out',
+                        'fade-in': 'fade-in 0.6s ease-out',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1) 0%, rgba(0, 255, 255, 0.1) 50%, rgba(0, 255, 0, 0.1) 100%);
+        }
+        .stat-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+        }
+        .feature-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+        .masonry-grid {
+            column-count: 4;
+            column-gap: 1rem;
+        }
+        @media (max-width: 1024px) {
+            .masonry-grid { column-count: 3; }
+        }
+        @media (max-width: 768px) {
+            .masonry-grid { column-count: 2; }
+        }
+        @media (max-width: 640px) {
+            .masonry-grid { column-count: 1; }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-inter min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-black/80 border-b border-neon-pink/20 sticky top-0 z-50 backdrop-blur-xl">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="text-2xl font-poppins font-bold bg-gradient-to-r from-neon-pink via-neon-cyan to-neon-green bg-clip-text text-transparent">
+                    🎭 Meme Community
+                </a>
+                <div class="hidden lg:flex items-center space-x-6">
+                    <div class="relative group">
+                        <button class="text-neon-cyan hover:text-neon-pink transition flex items-center space-x-1">
+                            <span>Home</span>
+                            <span>▼</span>
+                        </button>
+                        <div class="absolute top-full left-0 mt-2 w-40 bg-gray-900 border border-neon-pink/30 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <a href="index.html" class="block px-4 py-2 text-neon-cyan hover:bg-neon-cyan/10 rounded-t-lg">Home1</a>
+                            <a href="home2.html" class="block px-4 py-2 text-gray-300 hover:text-neon-pink hover:bg-neon-pink/10 rounded-b-lg">Home2</a>
+                        </div>
+                    </div>
+                    <a href="categories.html" class="text-gray-300 hover:text-neon-cyan transition">Categories</a>
+                    <a href="search.html" class="text-gray-300 hover:text-neon-cyan transition">Search</a>
+                    <a href="profile.html" class="text-gray-300 hover:text-neon-cyan transition">Profile</a>
+                    <a href="about.html" class="text-gray-300 hover:text-neon-cyan transition">About</a>
+                    <a href="contact.html" class="text-gray-300 hover:text-neon-cyan transition">Contact</a>
+                    <a href="notifications.html" class="relative text-gray-300 hover:text-neon-cyan transition">
+                        🔔
+                        <span class="absolute -top-1 -right-1 notification-badge w-5 h-5 rounded-full text-xs flex items-center justify-center">3</span>
+                    </a>
+                    <button id="themeToggle" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition text-neon-cyan" title="Toggle theme">
+                        <span id="themeIcon">🌙</span>
+                    </button>
+                    <a href="login.html" class="px-4 py-2 rounded-lg font-semibold border border-neon-green text-neon-green hover:bg-neon-green/10 transition">Login</a>
+                    <a href="register.html" class="px-4 py-2 rounded-lg font-semibold border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 transition">Register</a>
+                    <a href="upload.html" class="bg-gradient-to-r from-neon-pink to-neon-purple px-4 py-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-neon-pink/50 transition">Upload Meme</a>
+                </div>
+                <button class="lg:hidden text-neon-cyan text-2xl" id="mobileMenuBtn">☰</button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-neon-pink/30 p-4 space-y-3">
+            <div>
+                <button class="block text-neon-cyan font-semibold mb-2" id="mobileHomeBtn">Home ▼</button>
+                <div id="mobileHomeDropdown" class="hidden pl-4 space-y-2 mb-2">
+                    <a href="index.html" class="block text-gray-300">Home1</a>
+                    <a href="home2.html" class="block text-neon-pink">Home2</a>
+                </div>
+            </div>
+            <a href="categories.html" class="block text-gray-300">Categories</a>
+            <a href="search.html" class="block text-gray-300">Search</a>
+            <a href="upload.html" class="block w-full text-center bg-gradient-to-r from-neon-pink to-neon-purple px-4 py-2 rounded-lg font-semibold">Upload</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient py-20 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-neon-pink rounded-full blur-3xl"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-neon-cyan rounded-full blur-3xl"></div>
+        </div>
+        <div class="container mx-auto max-w-6xl relative z-10">
+            <div class="text-center animate-fade-in">
+                <h1 class="text-6xl md:text-7xl font-poppins font-bold mb-6">
+                    <span class="bg-gradient-to-r from-neon-pink via-neon-cyan to-neon-green bg-clip-text text-transparent">
+                        Where Memes Come Alive
+                    </span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                    Discover, create, and share the funniest memes with a community that gets your humor
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="upload.html" class="px-8 py-4 bg-gradient-to-r from-neon-pink to-neon-purple rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-neon-pink/50 transition transform hover:scale-105">
+                        Start Creating
+                    </a>
+                    <a href="categories.html" class="px-8 py-4 border-2 border-neon-cyan rounded-xl font-semibold text-lg text-neon-cyan hover:bg-neon-cyan/10 transition">
+                        Explore Categories
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-12 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="stat-card rounded-xl p-6 text-center animate-slide-up">
+                    <div class="text-4xl font-bold text-neon-pink mb-2" id="statMemes">2.5M+</div>
+                    <div class="text-gray-400 text-sm">Total Memes</div>
+                </div>
+                <div class="stat-card rounded-xl p-6 text-center animate-slide-up" style="animation-delay: 0.1s">
+                    <div class="text-4xl font-bold text-neon-cyan mb-2" id="statUsers">851K+</div>
+                    <div class="text-gray-400 text-sm">Active Users</div>
+                </div>
+                <div class="stat-card rounded-xl p-6 text-center animate-slide-up" style="animation-delay: 0.2s">
+                    <div class="text-4xl font-bold text-neon-green mb-2" id="statLikes">12M+</div>
+                    <div class="text-gray-400 text-sm">Likes Today</div>
+                </div>
+                <div class="stat-card rounded-xl p-6 text-center animate-slide-up" style="animation-delay: 0.3s">
+                    <div class="text-4xl font-bold text-neon-yellow mb-2" id="statShares">5.2M+</div>
+                    <div class="text-gray-400 text-sm">Shares This Week</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Creators -->
+    <section class="py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-4xl font-poppins font-bold bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text text-transparent">
+                    ⭐ Featured Creators
+                </h2>
+                <a href="leaderboard.html" class="text-neon-cyan hover:text-neon-pink transition text-sm font-semibold">
+                    View All →
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="feature-card bg-gray-900 rounded-xl p-6 border border-neon-pink/20">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-neon-pink to-neon-purple flex items-center justify-center text-2xl font-bold">
+                            MC
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">MemeKing</h3>
+                            <p class="text-gray-400 text-sm">@memeking</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-400">Followers</span>
+                        <span class="text-neon-cyan font-semibold">125K</span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-800">
+                        <p class="text-gray-300 text-sm">"Creating memes that make the internet laugh since 2020"</p>
+                    </div>
+                </div>
+                <div class="feature-card bg-gray-900 rounded-xl p-6 border border-neon-cyan/20">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-neon-cyan to-neon-green flex items-center justify-center text-2xl font-bold">
+                            LH
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">LaughHub</h3>
+                            <p class="text-gray-400 text-sm">@laughhub</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-400">Followers</span>
+                        <span class="text-neon-cyan font-semibold">98K</span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-800">
+                        <p class="text-gray-300 text-sm">"Daily dose of humor and relatable content"</p>
+                    </div>
+                </div>
+                <div class="feature-card bg-gray-900 rounded-xl p-6 border border-neon-green/20">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-neon-green to-neon-yellow flex items-center justify-center text-2xl font-bold">
+                            FM
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">FunnyMeme</h3>
+                            <p class="text-gray-400 text-sm">@funnymeme</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-400">Followers</span>
+                        <span class="text-neon-cyan font-semibold">87K</span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-800">
+                        <p class="text-gray-300 text-sm">"Spreading joy one meme at a time"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weekly Highlights -->
+    <section class="py-16 px-4 bg-gray-900/50">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-4xl font-poppins font-bold mb-8 text-center">
+                <span class="bg-gradient-to-r from-neon-yellow via-neon-pink to-neon-cyan bg-clip-text text-transparent">
+                    🏆 Weekly Highlights
+                </span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-black rounded-xl overflow-hidden border border-neon-pink/30 hover:border-neon-pink transition group">
+                    <div class="relative h-64 bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 flex items-center justify-center">
+                        <div class="absolute top-4 left-4 bg-neon-pink text-black px-3 py-1 rounded-full text-xs font-bold">
+                            #1 Trending
+                        </div>
+                        <div class="text-6xl">😂</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-2 group-hover:text-neon-pink transition">The Ultimate Relatable Meme</h3>
+                        <div class="flex items-center justify-between text-sm text-gray-400">
+                            <span>by @memeking</span>
+                            <div class="flex items-center space-x-3">
+                                <span>❤️ 45K</span>
+                                <span>💬 2.3K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-black rounded-xl overflow-hidden border border-neon-cyan/30 hover:border-neon-cyan transition group">
+                    <div class="relative h-64 bg-gradient-to-br from-neon-cyan/20 to-neon-green/20 flex items-center justify-center">
+                        <div class="absolute top-4 left-4 bg-neon-cyan text-black px-3 py-1 rounded-full text-xs font-bold">
+                            #2 Trending
+                        </div>
+                        <div class="text-6xl">🤣</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-2 group-hover:text-neon-cyan transition">Tech Meme of the Week</h3>
+                        <div class="flex items-center justify-between text-sm text-gray-400">
+                            <span>by @laughhub</span>
+                            <div class="flex items-center space-x-3">
+                                <span>❤️ 38K</span>
+                                <span>💬 1.8K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-black rounded-xl overflow-hidden border border-neon-green/30 hover:border-neon-green transition group">
+                    <div class="relative h-64 bg-gradient-to-br from-neon-green/20 to-neon-yellow/20 flex items-center justify-center">
+                        <div class="absolute top-4 left-4 bg-neon-green text-black px-3 py-1 rounded-full text-xs font-bold">
+                            #3 Trending
+                        </div>
+                        <div class="text-6xl">😆</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-2 group-hover:text-neon-green transition">Student Life Meme</h3>
+                        <div class="flex items-center justify-between text-sm text-gray-400">
+                            <span>by @funnymeme</span>
+                            <div class="flex items-center space-x-3">
+                                <span>❤️ 32K</span>
+                                <span>💬 1.5K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Features -->
+    <section class="py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-4xl font-poppins font-bold mb-12 text-center">
+                <span class="bg-gradient-to-r from-neon-pink via-neon-cyan to-neon-green bg-clip-text text-transparent">
+                    Why Join Our Community?
+                </span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center p-6 rounded-xl bg-gray-900/50 border border-neon-pink/20">
+                    <div class="text-5xl mb-4">🎨</div>
+                    <h3 class="font-bold text-lg mb-2 text-neon-pink">Creative Tools</h3>
+                    <p class="text-gray-400 text-sm">Powerful meme creation tools at your fingertips</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-gray-900/50 border border-neon-cyan/20">
+                    <div class="text-5xl mb-4">⚡</div>
+                    <h3 class="font-bold text-lg mb-2 text-neon-cyan">Lightning Fast</h3>
+                    <p class="text-gray-400 text-sm">Upload and share memes in seconds</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-gray-900/50 border border-neon-green/20">
+                    <div class="text-5xl mb-4">🌐</div>
+                    <h3 class="font-bold text-lg mb-2 text-neon-green">Global Reach</h3>
+                    <p class="text-gray-400 text-sm">Connect with meme lovers worldwide</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-gray-900/50 border border-neon-yellow/20">
+                    <div class="text-5xl mb-4">🏅</div>
+                    <h3 class="font-bold text-lg mb-2 text-neon-yellow">Earn Rewards</h3>
+                    <p class="text-gray-400 text-sm">Get recognized for your creativity</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meme Feed - Masonry Layout -->
+    <section class="py-16 px-4">
+        <div class="container mx-auto max-w-7xl">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-4xl font-poppins font-bold bg-gradient-to-r from-neon-pink to-neon-purple bg-clip-text text-transparent">
+                    📱 Latest Memes
+                </h2>
+                <div class="flex gap-3">
+                    <button class="px-4 py-2 rounded-lg bg-gray-900 border border-neon-pink/30 text-neon-pink hover:bg-neon-pink/10 transition">
+                        Hot
+                    </button>
+                    <button class="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 hover:border-neon-cyan transition">
+                        New
+                    </button>
+                    <button class="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 hover:border-neon-green transition">
+                        Top
+                    </button>
+                </div>
+            </div>
+            <div class="masonry-grid" id="memeFeed">
+                <!-- Memes will be loaded here in masonry layout -->
+                <div class="masonry-item bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-neon-pink transition">
+                    <div class="p-4">
+                        <div class="aspect-square bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 rounded-lg flex items-center justify-center mb-3">
+                            <span class="text-6xl">😄</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-400">@user123</span>
+                            <div class="flex items-center space-x-3 text-gray-400">
+                                <span>❤️ 1.2K</span>
+                                <span>💬 45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="masonry-item bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-neon-cyan transition">
+                    <div class="p-4">
+                        <div class="aspect-[4/5] bg-gradient-to-br from-neon-cyan/20 to-neon-green/20 rounded-lg flex items-center justify-center mb-3">
+                            <span class="text-6xl">🤪</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-400">@memequeen</span>
+                            <div class="flex items-center space-x-3 text-gray-400">
+                                <span>❤️ 890</span>
+                                <span>💬 32</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="masonry-item bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-neon-green transition">
+                    <div class="p-4">
+                        <div class="aspect-square bg-gradient-to-br from-neon-green/20 to-neon-yellow/20 rounded-lg flex items-center justify-center mb-3">
+                            <span class="text-6xl">😎</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-400">@coolmemes</span>
+                            <div class="flex items-center space-x-3 text-gray-400">
+                                <span>❤️ 2.1K</span>
+                                <span>💬 78</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="masonry-item bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-neon-purple transition">
+                    <div class="p-4">
+                        <div class="aspect-[3/4] bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 rounded-lg flex items-center justify-center mb-3">
+                            <span class="text-6xl">🤭</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-400">@funnyguy</span>
+                            <div class="flex items-center space-x-3 text-gray-400">
+                                <span>❤️ 567</span>
+                                <span>💬 21</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <button class="px-8 py-4 bg-gradient-to-r from-neon-purple via-neon-pink to-neon-cyan rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-neon-pink/50 transition transform hover:scale-105">
+                    Load More Memes
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 hero-gradient">
+        <div class="container mx-auto max-w-4xl text-center">
+            <h2 class="text-5xl font-poppins font-bold mb-6">
+                <span class="bg-gradient-to-r from-neon-pink via-neon-cyan to-neon-green bg-clip-text text-transparent">
+                    Ready to Share Your Humor?
+                </span>
+            </h2>
+            <p class="text-xl text-gray-300 mb-8">
+                Join thousands of creators and start making people laugh today
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="register.html" class="px-10 py-5 bg-gradient-to-r from-neon-pink to-neon-purple rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-neon-pink/50 transition transform hover:scale-105">
+                    Create Account
+                </a>
+                <a href="about.html" class="px-10 py-5 border-2 border-neon-cyan rounded-xl font-semibold text-lg text-neon-cyan hover:bg-neon-cyan/10 transition">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-neon-cyan/30 py-12 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-poppins font-bold text-neon-cyan mb-4">🎭 Meme Community</h3>
+                    <p class="text-gray-400 text-sm">Your ultimate destination for memes, laughs, and creativity</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3 text-neon-pink">Explore</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="categories.html" class="hover:text-neon-cyan transition">Categories</a></li>
+                        <li><a href="search.html" class="hover:text-neon-cyan transition">Search</a></li>
+                        <li><a href="leaderboard.html" class="hover:text-neon-cyan transition">Leaderboard</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3 text-neon-pink">Community</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="rules.html" class="hover:text-neon-cyan transition">Rules</a></li>
+                        <li><a href="about.html" class="hover:text-neon-cyan transition">About</a></li>
+                        <li><a href="contact.html" class="hover:text-neon-cyan transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3 text-neon-pink">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="privacy.html" class="hover:text-neon-cyan transition">Privacy</a></li>
+                        <li><a href="terms.html" class="hover:text-neon-cyan transition">Terms</a></li>
+                        <li><a href="dmca.html" class="hover:text-neon-cyan transition">DMCA</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-neon-pink/30 pt-6 text-center text-sm text-gray-400">
+                <p>&copy; 2025 Meme Community. All rights reserved. Made with 😂 and 💜</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Animated stats counter
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = formatNumber(target);
+                    clearInterval(timer);
+                } else {
+                    element.textContent = formatNumber(Math.floor(current));
+                }
+            }, 16);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M+';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K+';
+            }
+            return num + '+';
+        }
+
+        // Start animations when page loads
+        window.addEventListener('load', () => {
+            const statMemes = document.getElementById('statMemes');
+            const statUsers = document.getElementById('statUsers');
+            const statLikes = document.getElementById('statLikes');
+            const statShares = document.getElementById('statShares');
+            
+            if (statMemes) animateCounter(statMemes, 2500000);
+            if (statUsers) animateCounter(statUsers, 850000);
+            if (statLikes) animateCounter(statLikes, 12000000);
+            if (statShares) animateCounter(statShares, 5200000);
+        });
+
+        // Mobile home dropdown toggle
+        const mobileHomeBtn = document.getElementById('mobileHomeBtn');
+        const mobileHomeDropdown = document.getElementById('mobileHomeDropdown');
+        
+        if (mobileHomeBtn && mobileHomeDropdown) {
+            mobileHomeBtn.addEventListener('click', () => {
+                mobileHomeDropdown.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+</html>
